@@ -22,11 +22,6 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="100px"
                 android:layout_height="500dp" />
-            <!--<OxyPlot.Xamarin.Android.PlotView
-                android:id="@+id/plot_viewHumidity"
-                android:layout_width="match_parent"
-                android:layout_marginTop="50px"
-                android:layout_height="500dp" />-->
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
