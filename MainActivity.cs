@@ -23,12 +23,13 @@ using OxyPlot.Axes;
 namespace ArduinoMonitor
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    class ChartActivity : AppCompatActivity
+    class MainActivity : AppCompatActivity
     {
         string hostURL = "http://example.net/api"   //change to wherever you retrieve the sensor values
 
         List<Record> dataList = new List<Record>();
         Records recordList;
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
