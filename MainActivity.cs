@@ -22,14 +22,10 @@ using OxyPlot.Axes;
 
 namespace ArduinoMonitor
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme")]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     class ChartActivity : AppCompatActivity
     {
-        DrawerLayout drawerLayout;
-        NavigationView navigationView;
-
-        bool logged_in = false;
-        int selectedNavItem = 0;
+        string hostURL = "http://example.net/api"   //change to wherever you retrieve the sensor values
 
         List<Record> dataList = new List<Record>();
         Records recordList;
@@ -45,56 +41,14 @@ namespace ArduinoMonitor
 
             Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
-            //SupportActionBar.Title = dataList[0].Temp.ToString();
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetDisplayShowTitleEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
-
-            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
-            navigationView.NavigationItemSelected += NavigationView_NavigationItemSelected;
-
-            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-            var drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, Resource.String.open_drawer, Resource.String.close_drawer);
-            drawerLayout.AddDrawerListener(drawerToggle);
-            drawerToggle.SyncState();
-            navigationView.SetCheckedItem(Resource.Id.nav_config);
-            selectedNavItem = Resource.Id.nav_chart;
         }
 
-        void NavigationView_NavigationItemSelected(object sender, NavigationView.NavigationItemSelectedEventArgs e)
-        {
-            switch (e.MenuItem.ItemId)
-            {
-                case (Resource.Id.nav_home):
-                    navigationView.SetCheckedItem(Resource.Id.nav_home);
-                    StartActivity(new Intent(this, typeof(MainActivity)).SetFlags(ActivityFlags.ReorderToFront));
-                    break;
-                case (Resource.Id.nav_chart):
-
-                    break;
-                case (Resource.Id.nav_config):
-                    if (!logged_in)
-                    {
-                        Toast.MakeText(Application.Context, "please sign in first!", ToastLength.Short).Show();
-                        navigationView.SetCheckedItem(selectedNavItem);
-                    }
-                    else
-                    {
-                        StartActivity(new Intent(this, typeof(ConfigActivity)).SetFlags(ActivityFlags.ReorderToFront));
-                    }
-                    break;
-                case (Resource.Id.nav_devices):
-
-                    break;
-            }
-            selectedNavItem = e.MenuItem.ItemId;
-            // Close drawer
-            drawerLayout.CloseDrawers();
-        }
-
+        
         private void SetUpChart()
         {
-            //Temperature
             PlotView viewTemp = FindViewById<PlotView>(Resource.Id.plot_viewTemp);
             PlotModel plotModelTemp = new PlotModel { Title = "Temperature/Humidity" };
 
@@ -144,33 +98,6 @@ namespace ArduinoMonitor
             plotModelTemp.Series.Add(seriesHumidity);
 
             viewTemp.Model = plotModelTemp;
-
-            //Humidity
-            //PlotView viewHumidity = FindViewById<PlotView>(Resource.Id.plot_viewHumidity);
-
-            //PlotModel plotModelHumidity = new PlotModel { Title = "Humidity" };
-
-            //plotModelTemp.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom });
-            //plotModelTemp.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Maximum = 10, Minimum = 0 });
-
-            //LineSeries seriesHumidity = new LineSeries
-            //{
-            //    MarkerType = MarkerType.Circle,
-            //    MarkerSize = 4,
-            //    MarkerStroke = OxyColors.White
-            //};
-
-            //seriesHumidity.Points.Add(new DataPoint(0.0, 6.0));
-            //seriesHumidity.Points.Add(new DataPoint(1.4, 2.1));
-            //seriesHumidity.Points.Add(new DataPoint(2.0, 4.2));
-            //seriesHumidity.Points.Add(new DataPoint(3.3, 2.3));
-            //seriesHumidity.Points.Add(new DataPoint(4.7, 7.4));
-            //seriesHumidity.Points.Add(new DataPoint(6.0, 6.2));
-            //seriesHumidity.Points.Add(new DataPoint(8.9, 8.9));
-
-            //plotModelTemp.Series.Add(seriesHumidity);
-
-            //viewHumidity.Model = plotModelHumidity;
         }
 
         public string _formatter(double d)
@@ -180,7 +107,7 @@ namespace ArduinoMonitor
 
         public void RetrieveRecords()
         {
-            HttpWebRequest webRequest = WebRequest.Create("http://bard.bplaced.net/api") as HttpWebRequest;
+            HttpWebRequest webRequest = WebRequest.Create(hostURL) as HttpWebRequest;
             if (webRequest == null)
             {
                 return;
