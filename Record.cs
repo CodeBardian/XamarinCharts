@@ -2,14 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Android.Support.V7.App;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Support.Design.Widget;
-using Android.Support.V4.Widget;
-using Android.Views;
 using Newtonsoft.Json;
 using System.Net;
 using System.IO;
